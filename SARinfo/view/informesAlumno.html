@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>MiniSAR</title>
+	<link rel="stylesheet" href="/SARinfo/css/bootstrap.css" />
+	<link href="/SARinfo/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="/SARinfo/css/grafico_style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<script  src="https://code.jquery.com/jquery-2.2.4.min.js"  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="  crossorigin="anonymous"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>	
+</head>
+
+<body >
+
+<section class="container container-fluid col-lg-12 col-md-12 col-sm-12 col-xs-12">	
+	<header class=" row pt-8 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 pt-5 pl-5">
+			<p class="text-uppercase display-4" style="color: white;">Laboratorio de Inform&Aacute;tica</p>
+			<p class="display-3" style="color: white;">M&Oacute;DULO DE HORAS LIBRES</p>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+		<span class="thumbnail" style="background: #184391; border: none;">
+			<a href="/index.html"><img src="/img/logo.png" alt="logo UDB" /></a>
+		</span>
+		</div>
+	</header>
+</section>
+<div class="container"><form action="informesAlumno.php" method="post" class=" col-md-12 form-inline mt-2 justify-content-center"  >	
+	
+	<label for="inlineFormInput" class="mr-sm-2">Carnet:</label>
+	<input class="form-control mb-2 mr-sm-2 mb-sm-0 col-md-2" type="text" name="carnet" placeholder="Carnet" id="carnet" required="true">		
+	<label for="example-datetime-local-input" class="mr-sm-2">Desde:</label>
+	<input class="form-control mb-2 mr-sm-2 mb-sm-0" type="date" value="YYYY/MM/DD" id="example-datetime-local-input" name="fecha1" required="true">
+	<label for="example-datetime-local-input" class="mr-sm-2">Hasta:</label>
+	<input class="form-control mb-2 mr-sm-2 mb-sm-0" type="date" value="YYYY/MM/DD" id="example-datetime-local-input" name="fecha2" required="true">
+	<input type="submit" class="btn btn-primary col-md-1" name="busqueda" value="Enviar">		
+</form>
+</div>
+
+<br><br>
+      <div class="col-lg-12">
+      
+      
+      <div class="col-md-1"></div>
+      <div class="col-md-10">	
+
+        <div class='jumbotron jumbotron-fluid mt-5'>
+            <div class='container'>
+              <h1 class='display-3'>Informes Hora Libre</h1>
+              <p class='lead'>Ingrese el numero de carnet y rango de fechas para ver el registro de alumnos</p>
+            </div>
+      </div>
+    </div>
+</div>
+
+<div class="container">
+	<a href="informe.html" class="btn btn-primary col-md-1 btn-1">Volver al menú</a>
+</div>
+
+<footer class="col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-center">
+	<p class="legal justify-content-center">© Copyright 2023 | Universidad Don Bosco | All Rights Reserved.</p>
+	<p class="credit">Desarrollo: Samuel Lopez, William Henriquez, Christian Montoya, Mateo Ledesma, Verónica Abrego</p>
+</footer>	   
+</body>
+</html>

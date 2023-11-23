@@ -1,0 +1,29 @@
+﻿@import 'https://fonts.googleapis.com/css?family=Oswald';
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-size: 1.2rem;	
+}
+
+
+header{
+	font-family: 'Oswald', sans-serif;
+	background: #184391;
+	height: 185px;
+	color: white !important;
+}
+footer{
+	padding-top: 10px;
+	color: white;
+	font-weight: bold;
+	background: #184391;
+	margin-top: 30px;
+	text-align: center;
+	height: 120px;
+
+}
+
+
+
+

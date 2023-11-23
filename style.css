@@ -1,0 +1,214 @@
+﻿@import 'https://fonts.googleapis.com/css?family=Oswald';
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	color: white;
+	font-family: 'Oswald', sans-serif;
+}
+html{
+	height: 100%;
+	width: 100%;
+
+}
+
+body{
+	height: 100%;
+	width: 100%;
+	background: #E6EAEB;
+}
+header, .contenedor,.wrapper, footer{
+	width: 1000px;
+	margin: 0 auto;
+}
+/*Diseño del header*/
+header{
+	background: #184391;
+	height: 100px;
+}
+.title, .logo{
+	display: inline-block;
+	vertical-align: top;
+}
+.title{
+	width: 84%;
+	padding-left: 5%;
+	text-transform: uppercase;
+}
+.logo{
+	width: 15%;
+}
+.logo img{
+	width: 55%;
+}
+
+/*Diseño del cuerpo*/
+
+.fondo{
+	width: 100%;
+}
+#form01{
+	width: 100%;
+	position: relative;
+}
+.form{
+	color: white;
+	display: inline-block;
+	font-family: arial;
+	position: absolute;
+	top: 20px;
+	background: rgba(26, 31, 39,1.0);
+	width: 30%;
+	min-width:300px;
+	height: 300px;
+	padding: 10px;
+	left: 10%;
+	text-align: center;
+}
+section#prueba{
+	color: black;
+	display: inline-block;
+	font-family: arial;
+	position: absolute;
+	left: 600px;
+	z-index: 1000;
+	background: rgba(26, 31, 39,1.0);
+	width: 30%;
+	min-width:300px;
+	height: 300px;
+	padding: 10px;
+	left: 30%;
+	text-align: center;
+}
+form div{
+	width: 75%;
+	min-width:220px;
+	margin: 15px;
+	position: relative;
+	margin: 20px 10px;
+	text-align: right;
+	color: black;
+}
+.lb{
+	display: inline-block;
+	color: black;
+	position: absolute;
+    	top: 0;
+    	left: 0;
+    	padding: 10px 15px;
+    	background: #ecf0f1;
+    	border-right: 1px solid gray;
+    	border-top-left-radius: 5px;
+    	border-bottom-left-radius: 5px;
+}
+.ipcarnet, select{
+	  display: inline-block;
+	  font-size: 15px;
+	  width:200px;
+	  margin-left: 31%;
+	  padding: 10px 0 9px 15px;
+	  font-family: Arial;
+	  font-weight: bold;
+	  max-height:40px;
+	  color: black;
+	  background: #ecf0f1;
+	  border: 0;
+	  border-radius: 0 3px 3px 0;
+	  outline: 0;
+	  text-indent: 20px;
+	  	  
+}
+option{
+	color: #000;
+}
+select{
+	padding: 11px 0 11px 15px;
+	font-size: 15px;
+	text-align: left;
+	background: url(img/arrow.png) no-repeat #ecf0f1 150px 5px !important;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	appearance: none;
+}
+/*Estilos de Botones*/
+.botones{
+	text-align: center;
+	width: 90%;
+	margin: 0 auto;
+}
+.boton{
+	background:#2D2F37;
+	display: inline-block;
+	width: 49%;
+	font: 12px;
+	color: #F5AA13;
+	height: 30px;
+}
+.boton:hover, .btncorte:hover{
+	color: white;
+}
+.btncorte{
+	margin-top: 5px;
+	background: #194291;
+	border-radius: 0;
+	color: #F5AA13;
+	width: 100%;
+}
+/*Estilos de la tabla*/
+.Estilo7{
+	margin: 15px;
+	margin-left: 25px;
+	width: 40%;
+	color: black;
+	background: #F5AA13;
+	display: inline-block;
+	padding: 15px;
+	font-size: 20px;
+	text-align: center;
+	border-radius: 8px;
+	font-weight: bold;
+	letter-spacing: 2.5px;
+}
+#page{
+	width: 95%;
+	padding: 0px;
+	border-radius: 10px;
+	background: #174493;
+	margin: 0 auto;
+
+}
+.tbstilo{
+	width: 99%;
+	margin: 0 auto;
+	background: #174493;
+	border-radius: 10px;
+	height: 100px;
+}
+.trborder{
+	border-top: white 2px solid;
+}
+td:nth-child(even){
+	border-left: white 1px solid;
+	border-right: white 1px solid;
+}
+/*Estilo del footer*/
+footer{
+	background: #174493;
+	padding-top: 60px;
+	margin-top: 40px;
+	text-align: center;
+	height: 160px;
+
+}
+@media screen and (max-width:1000px){
+	header, .contenedor,.wrapper, footer{
+	width:800px;
+	}
+	.Estilo7{
+		font-size:16px;
+	}
+		
+
+
+}

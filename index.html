@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniSAR</title>
+    <link rel="stylesheet" href="bootstrap.css"/>
+    <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+    <script   src="https://code.jquery.com/jquery-2.2.4.js"   integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="   crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js">
+</head>
+<body onload="form1.carnet.focus()">
+    <header>
+		<div class="title">
+			<h2>Laboratorio de Informática</h2>
+			<h4>MÓDULO DE HORAS LIBRES</h4>
+		</div>
+		<div class="logo">
+			<img src="./img/logo.png" alt="logo UDB" />
+		</div>
+	</header>
+    <section class="contenedor">
+		<div id="form01">
+			<img src="img/fondo.jpg" alt="" class="fondo">
+			<form class="form-inline" action="wsinfo.php" method="post" name="form1">
+				<div class="form">
+					<h2>BIENVENIDO</h2>
+					<div class="">
+						<label for="Carnet" class="lbcarnet lb">Carnet: </label>					
+						<input class="ipcarnet"type="text" id="idcarnet" name="carnet" required autofocus>
+					</div>
+					<div class="select">
+						<label for="Sala" class="lb" >Sala:&nbsp;&nbsp;&nbsp; </label>
+						<select name="sala">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
+							<option>11</option>
+						</select>
+					</div>
+					<div class="botones">
+						
+						<a class="boton btn" href="/SARinfo/view/informe.html">Consultar</a>
+						<a href="#" class="boton btn" id="insert" >Realizar corte</a>
+                        <script>
+                            $('#insert').click(function(){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡CORTE REALIZADO!'
+                                })
+                            })
+                        </script>
+						<input type="submit" value="Reservar" class="btn btncorte"> 
+					</div>
+				</div>
+			</form>
+        </div>
+
+        <!-- Conteo de estudiantes en sala  -->
+        <span class="Estilo7">ESTUDIANTES EN HORAS LIBRES </span>
+		<div id="wrapper" class="wrapper">
+			<div id="page">
+				<table class="tbstilo">
+					<tr>
+						<td><div align="center">Sala 1 </div></td>
+						<td><div align="center">Sala 2 </div></td>
+						<td><div align="center">Sala 3 </div></td>
+						<td><div align="center">Sala 4 </div></td>
+						<td><div align="center">Sala 5 </div></td>
+						<td><div align="center">Sala 6 </div></td>
+						<td><div align="center">Sala 7 </div></td>
+						<td><div align="center">Sala 8 </div></td>
+						<td><div align="center">Sala 9 </div></td>
+						<td><div align="center">Sala 10 </div></td>
+						<td><div align="center">Sala 11 </div></td>
+		
+		</tr>
+				<tr class="trborder">
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+						<td><div align="center">0</div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</section><!-- fin de la página -->
+    <footer class="col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-center">
+        <p class="legal justify-content-center">© Copyright 2023 | Universidad Don Bosco | All Rights Reserved.</p>
+        <p class="credit">Desarrollo: Samuel Lopez, William Henriquez, Christian Montoya, Mateo Ledesma, Verónica Abrego</p>
+    </footer>
+</body>
+<script language="JavaScript">
+    document.form1.carnet.focus();
+</script>
+</html>
