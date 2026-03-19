@@ -1,128 +1,176 @@
 <?php
 include("conectar.php");
-conectarse();
-//capturar el carnet del formulario
-$carnet=$_GET["carnet"];
-$sala=$_GET["sala"];
 
-echo $sala;
-echo $carnet;
-echo "sala=$sala<br>";
+$con = conectarse();
 
-/*if($carnet==null)
-die("DEBE INGRESAR UN CARNET");*/
+$carnet = isset($_REQUEST["carnet"]) ? trim($_REQUEST["carnet"]) : "";
+$sala   = isset($_REQUEST["sala"]) ? (int)$_REQUEST["sala"] : 0;
 
-//$carnet = substr ($carnet, 0,8);//corto el carnet ingresado
-//$rex="'/([a-zA-Z]){2}([0-9]){6}/'"; //Modificaciones en la expresión
-//if (preg_match($rex, $carnet, $regs))//valido que el carnet tenga 2 letras mayus o minus al principio y comparo --- CAMBIOS ereg los sustituyo por 
-//{
-		
-		$sql="SELECT count(*) existe from alumnos where carnet = '$carnet'";
-	
-		//echo "sql = $sql<br>";
-		$query=mysqli_query($connect,$sql) or die ("Imposible realizar la sentencia sql");
-		//$numero=mysqli_num_rows($query);//NUMERO DE RESULTADO
-		
-   		$fechahora= date("Y-m-d H:i:s");
-	    
-		if($numero>0)
-		{
+$fechahora = date("Y-m-d H:i:s");
+$ciclo = "01-2023"; // cámbialo cuando corresponda
 
-			//$car=$carnet.".jpg";
-			//verifico si el carnet tiene foto
+function mostrarMensaje($titulo, $mensaje, $sala, $tipo = "info") {
+    $color = "#184391";
+    if ($tipo === "error") $color = "#d9534f";
+    if ($tipo === "ok") $color = "#1f8b4c";
 
-			/*if(file_exists("FotosAlumnos/".$car))
-			{echo "<img src=\"FotosAlumnos/$car\" WIDTH=140 HEIGHT=210>";
-			}*/
-			//else
-			//{
-			//
-			//echo "<img src=\"FotosAlumnos/noimagen.jpg\" WIDTH=140 HEIGHT=210>";}
-			//
-			//echo "<br><br>";
+    echo '<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="3;url=index.php?s=' . htmlspecialchars($sala) . '">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reserva</title>
+        <style>
+            body{
+                margin:0;
+                font-family:Arial, sans-serif;
+                background:#eef1f5;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:100vh;
+            }
+            .card{
+                background:#fff;
+                width:min(500px, 92%);
+                padding:30px;
+                border-radius:18px;
+                box-shadow:0 10px 30px rgba(0,0,0,.12);
+                text-align:center;
+            }
+            h2{
+                margin:0 0 12px;
+                color:' . $color . ';
+            }
+            p{
+                margin:0;
+                font-size:18px;
+                color:#243041;
+                line-height:1.5;
+            }
+            .small{
+                margin-top:16px;
+                font-size:14px;
+                color:#6b7280;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <h2>' . htmlspecialchars($titulo) . '</h2>
+            <p>' . $mensaje . '</p>
+            <p class="small">Serás redirigido automáticamente...</p>
+        </div>
+    </body>
+    </html>';
+    exit;
+}
 
-			//$datos=mysqli_fetch_array($connect,$query);
-		
-			//echo $datos[4];
-			echo "<br><br>";
+if ($carnet === "" || $sala <= 0) {
+    mostrarMensaje("Datos inválidos", "Debes ingresar un carnet y seleccionar una sala válida.", $sala, "error");
+}
 
-			//VERIFICO SI EL ALUMNO TIENE HORAS
-			//if($datos[3]<=0)
-			die("EL ALUMNO YA NO POSEE HORAS LIBRES");
-			//servicios suspendidos
-			if($datos[2]==2)
-			die("NO SE LE PUEDE PRESTAR SERVICIO DE HORAS LIBRES");
-			//El usuario no eestaba en computo
+try {
+    mysqli_begin_transaction($con);
 
-			if($datos[2]==0)
-			{
-			$d=$datos[1];
-			$sql="INSERT INTO reserva VALUES (0,'$d','$fechahora','',$sala,'01-2023')";
-			$sql2="UPDATE alumnos SET estado=1 where carnet='$d'";
-			$query=mysql_query($sql) or die (mysql_error());
-			$query=mysql_query($sql2) or die (mysql_error());
-			echo "MARCA ENTRADA $carnet a las $fechahora en sala $sala";
-			//echo "<meta equiv=\"Refresh\" content=\"3;URL=index.php\">";
-		 	//echo "<html><head><meta http-equiv=\"Refresh\" content=\"3;url=index.php?s=$sala\"></head></html>"; //refreso automáticamente
-			}
-		    else
-		    {
-			//si ya estaba en computo
-			$d=$datos[1];
-			//se busca por el idreserva
-			$sqlreser="SELECT MAX(idreserva) FROM reserva WHERE idalumno='$d'";
-			$q=mysql_query($sqlreser) or die ("primer error");
-			$dat=mysql_fetch_array($q);
-			//le damos la hora de salida
-			$sql="UPDATE reserva SET hora_salida='$fechahora' where idreserva=$dat[0]";
-			$query=mysql_query($sql) or die ("segundo error");
-			//el alumno sale del computo
-			$sql2="UPDATE alumnos SET estado=0 where carnet='$d'";
-			$query=mysql_query($sql2) or die ("ter error");
-			//restamos las horas al alumno
-			$sql3= "SELECT idreserva, hora_entra, hora_salida, minute( TIMEDIFF( hora_salida, hora_entra ) ) AS m1,hour( TIMEDIFF( hora_salida, hora_entra ) ) *60 AS m2, (minute( TIMEDIFF( hora_salida, hora_entra ) ) + hour( TIMEDIFF( hora_salida, hora_entra ) ) *60) AS total FROM reserva WHERE idreserva = $dat[0]";
-			$query3=mysql_query($sql3) or die (mysql_error());
-     		$dat3=mysql_fetch_array($query3);
+    $stmt = mysqli_prepare($con, "SELECT carnet, estado, horas FROM alumnos WHERE carnet = ?");
+    mysqli_stmt_bind_param($stmt, "s", $carnet);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+    $alumno = mysqli_fetch_assoc($resultado);
+    mysqli_stmt_close($stmt);
 
-			if($datos[3]>=$dat3[5])
-			$horitas=$datos[3]-$dat3[5];
-			else
-			$horitas=0;
-			$sql4="UPDATE alumnos SET horas=$horitas where carnet='$d'";			
-				mysql_query($sql4) or die (mysql_error());
-			echo "MARCA SALIDA $carnet a las $fechahora";
-			//que regrese si es posible
-                
-                
-		 echo "<html><head><meta http-equiv=\"Refresh\" content=\"3;url=index.php?s=$sala\"></head></html>";
-		//   echo "<meta equiv=\"Refresh\" content=\"3;URL=index.php\">";
-			}
-		}
-		else
-		{//es un alumno nuevo
-		 /*$sqlin="INSERT INTO alumnos(carnet) VALUES ('$carnet')";  
-			echo "sql = $sqlin<br>";
-		 $queryin=mysql_query($sqlin) or die (mysql_error());
-		 
-		$sql="SELECT * from alumnos where carnet = '$carnet'";
-		
-		$query=mysql_query($sql) or die ("Imposible realizar la sentencia sql");
-		$datos=mysql_fetch_array($query);
-		$n=$datos[0];
-		
-		$sql="INSERT INTO reserva(idalumno,hora_entra,idsala) VALUES ($n,'$fechahora',$sala)";
-		$query=mysql_query($sql) or die (mysql_error());
-		echo "MARCA ENTRADA  $carnet a las $fechahora nuevo ingreso en sala $sala";
+    if (!$alumno) {
+        mysqli_rollback($con);
+        mostrarMensaje("Alumno no encontrado", "El usuario no está inscrito en el sistema.", $sala, "error");
+    }
 
-		 echo "<meta equiv=\"Refresh\" content=\"3;URL=pagina.html\">";*/
-		 die("EL USUARIO NO ESTA INSCRITO EN EL SISTEMA");
-		
-		}
+    $estado = (int)$alumno["estado"];
+    $horas  = (int)$alumno["horas"];
+    $idalumno = $alumno["carnet"]; // se conserva la lógica vieja usada por reserva.idalumno
 
-//}
-//else
-echo "EL CARNET INGRESADO ES INVALIDO";
+    if ($horas <= 0) {
+        mysqli_rollback($con);
+        mostrarMensaje("Sin horas disponibles", "El alumno ya no posee horas libres.", $sala, "error");
+    }
 
+    if ($estado === 2) {
+        mysqli_rollback($con);
+        mostrarMensaje("Servicio suspendido", "No se le puede prestar servicio de horas libres.", $sala, "error");
+    }
+
+    if ($estado === 0) {
+        $stmt = mysqli_prepare($con, "INSERT INTO reserva (idalumno, hora_entra, hora_salida, idsala, ciclo) VALUES (?, ?, '', ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssis", $idalumno, $fechahora, $sala, $ciclo);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        $stmt = mysqli_prepare($con, "UPDATE alumnos SET estado = 1 WHERE carnet = ?");
+        mysqli_stmt_bind_param($stmt, "s", $idalumno);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        mysqli_commit($con);
+        mostrarMensaje(
+            "Marca de entrada registrada",
+            "Se registró la entrada de <strong>" . htmlspecialchars($carnet) . "</strong> a las <strong>" . htmlspecialchars($fechahora) . "</strong> en la sala <strong>" . htmlspecialchars($sala) . "</strong>.",
+            $sala,
+            "ok"
+        );
+    } else {
+        $stmt = mysqli_prepare($con, "SELECT idreserva FROM reserva WHERE idalumno = ? ORDER BY idreserva DESC LIMIT 1");
+        mysqli_stmt_bind_param($stmt, "s", $idalumno);
+        mysqli_stmt_execute($stmt);
+        $resultado = mysqli_stmt_get_result($stmt);
+        $reserva = mysqli_fetch_assoc($resultado);
+        mysqli_stmt_close($stmt);
+
+        if (!$reserva) {
+            mysqli_rollback($con);
+            mostrarMensaje("Error de reserva", "No se encontró una reserva activa para este alumno.", $sala, "error");
+        }
+
+        $idreserva = (int)$reserva["idreserva"];
+
+        $stmt = mysqli_prepare($con, "UPDATE reserva SET hora_salida = ? WHERE idreserva = ?");
+        mysqli_stmt_bind_param($stmt, "si", $fechahora, $idreserva);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        $stmt = mysqli_prepare($con, "UPDATE alumnos SET estado = 0 WHERE carnet = ?");
+        mysqli_stmt_bind_param($stmt, "s", $idalumno);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        $stmt = mysqli_prepare($con, "SELECT TIMESTAMPDIFF(MINUTE, hora_entra, hora_salida) AS total FROM reserva WHERE idreserva = ?");
+        mysqli_stmt_bind_param($stmt, "i", $idreserva);
+        mysqli_stmt_execute($stmt);
+        $resultado = mysqli_stmt_get_result($stmt);
+        $tiempo = mysqli_fetch_assoc($resultado);
+        mysqli_stmt_close($stmt);
+
+        $minutosConsumidos = isset($tiempo["total"]) ? (int)$tiempo["total"] : 0;
+        $horitas = max($horas - $minutosConsumidos, 0);
+
+        $stmt = mysqli_prepare($con, "UPDATE alumnos SET horas = ? WHERE carnet = ?");
+        mysqli_stmt_bind_param($stmt, "is", $horitas, $idalumno);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        mysqli_commit($con);
+        mostrarMensaje(
+            "Marca de salida registrada",
+            "Se registró la salida de <strong>" . htmlspecialchars($carnet) . "</strong> a las <strong>" . htmlspecialchars($fechahora) . "</strong>.",
+            $sala,
+            "ok"
+        );
+    }
+
+} catch (Throwable $e) {
+    mysqli_rollback($con);
+    mostrarMensaje("Error del sistema", "Ocurrió un problema al procesar la reserva: " . htmlspecialchars($e->getMessage()), $sala, "error");
+}
+
+desconectarse();
 ?>
-
-

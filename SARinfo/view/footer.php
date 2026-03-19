@@ -1,10 +1,13 @@
-<footer class="col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-center">
-        <p class="legal justify-content-center">© Copyright 2026 | Universidad Don Bosco | All Rights Reserved.</p>
-        <p class="credit">Desarrollo: Verónica Abrego</p>
-    </footer>
+<footer class="home-footer">
+    <p>© Copyright 2026 | Universidad Don Bosco | All Rights Reserved.</p>
+    <p>Desarrollo: Verónica Abrego, Carlos Alfaro</p>
+</footer>
+
 <script>
-  $(document).ready(function(){
-    $('#demo').DataTable();
+$(document).ready(function(){
+    if ($('#demo').length) {
+        $('#demo').DataTable();
+    }
 });
-</script>	
+</script>
 

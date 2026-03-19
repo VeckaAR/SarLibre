@@ -117,7 +117,7 @@ while ($capacidad = mysqli_fetch_assoc($query_capacidades)) {
 
 	<footer class="home-footer">
         <p>© Copyright 2026 | Universidad Don Bosco | All Rights Reserved.</p>
-        <p>Desarrollo: Verónica Abrego</p>
+        <p>Desarrollo: Verónica Abrego, Carlos Alfaro</p>
     </footer>
 
 <script>
