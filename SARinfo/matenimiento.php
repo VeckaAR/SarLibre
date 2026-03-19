@@ -79,41 +79,37 @@
     function showOptions(option) {
         obtenerSalas();
 
-        // Oculta todas las opciones
         document.querySelectorAll('.option-container').forEach(optionContainer => {
             optionContainer.style.display = 'none';
         });
 
-        // Muestra la opción seleccionada
         document.getElementById(`${option}-options`).style.display = 'block';
 
-        // Limpia los campos al cambiar de opción
         document.getElementById('numeroAlumnosEditar').value = '';
         document.getElementById('numeroSalaCrear').value = '';
         document.getElementById('numeroAlumnosCrear').value = '';
     }
 
     function guardarCambios() {
-        const selectedSala = document.getElementById('selectSalaEditar').value;
-        const numeroAlumnos = document.getElementById('numeroAlumnosEditar').value;
-    
-        // Aquí debes enviar los datos al servidor para actualizar la sala en la base de datos
-        // Puedes usar AJAX o Fetch para realizar una solicitud al servidor
-        // y ejecutar una consulta SQL para actualizar los datos en la base de datos
         let data = {
             capacidadSala: document.querySelector("#numeroAlumnosEditar").value,
             salaEditar: document.querySelector("#selectSalaEditar").value
-        }
-        fetch(window.location.origin + "/CRUD/actualizarsala.php", {
+        };
+
+        fetch("../CRUD/actualizarsala.php", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         })
-        .then(data => data.text())
-        .then(data => {
-            if (data.trim() == "OK") {
+        .then(res => res.text())
+        .then(res => {
+            console.log(res);
+            if (res.trim() === "OK") {
                 alert('Cambios guardados exitosamente.');
             } else {
-                alert('Error al actualizar, intente nuevamente.');
+                alert('Error al actualizar: ' + res);
             }
         })
         .catch(e => {
@@ -123,28 +119,32 @@
     }
 
     function guardarNuevaSala() {
-        const numeroSala = document.getElementById('numeroSalaCrear').value;
-        const numeroAlumnos = document.getElementById('numeroAlumnosCrear').value;
         let data = {
             numeroSala: document.querySelector("#numeroSalaCrear").value,
             capacidadSala: document.querySelector("#numeroAlumnosCrear").value
-        }
-        fetch(window.location.origin + "/CRUD/agregarsala.php", {
+        };
+
+        fetch("../CRUD/agregarsala.php", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         })
-        .then(data => data.text())
-        .then(data => {
-            if (data.trim() == "OK") {
+        .then(res => res.text())
+        .then(res => {
+            console.log(res);
+            if (res.trim() === "OK") {
                 alert('Nueva sala guardada exitosamente.');
                 document.getElementById('numeroSalaCrear').value = "";
                 document.getElementById('numeroAlumnosCrear').value = "";
+                obtenerSalas();
             } else {
-                alert('Error al guardar, intente nuevamente');
+                alert('Error al guardar: ' + res);
             }
         })
         .catch(e => {
-            alert('Error al guardar, intente nuevamente');
+            alert('Error al guardar, intente nuevamente.');
             console.log(e);
         });
     }
@@ -153,8 +153,13 @@
         const selectedSala = document.getElementById('selectSalaEliminar').value;
         let element = document.getElementById('selectSalaEliminar');
 
+        if (!selectedSala) {
+            Swal.fire('Aviso', 'Selecciona una sala.', 'warning');
+            return;
+        }
+
         const numeroAlumnos = element[element.selectedIndex].getAttribute("data-max");
-        
+
         Swal.fire({
             title: `¿Estás seguro de eliminar la Sala ${selectedSala}?`,
             html: `Número de Alumnos: ${numeroAlumnos}`,
@@ -165,24 +170,25 @@
             confirmButtonText: 'Sí, eliminar'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Aquí debes enviar los datos al servidor para eliminar la sala de la base de datos
-                // Puedes usar AJAX o Fetch para realizar una solicitud al servidor
-                // y ejecutar una consulta SQL para eliminar los datos en la base de datos
                 let data = {
                     salaEliminar: selectedSala
                 };
-                fetch(window.location.origin + "/CRUD/eliminarsala.php", {
+
+                fetch("../CRUD/eliminarsala.php", {
                     method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify(data)
                 })
-                .then(data => data.text())
-                .then(data => {
-                    console.log(data);
-                    if (data.trim() == "OK") {
+                .then(res => res.text())
+                .then(res => {
+                    console.log(res);
+                    if (res.trim() === "OK") {
                         obtenerSalas();
                         Swal.fire('Eliminado', 'La sala ha sido eliminada.', 'success');
                     } else {
-                        Swal.fire('Error', 'La sala no ha sido eliminada.', 'error');
+                        Swal.fire('Error', 'La sala no ha sido eliminada: ' + res, 'error');
                     }
                 })
                 .catch(e => {
@@ -192,10 +198,11 @@
             }
         });
     }
-    function obtenerSalas () {
+
+    function obtenerSalas() {
         let editarSelect = document.querySelector("#selectSalaEditar");
         let eliminarSelect = document.querySelector("#selectSalaEliminar");
-        
+
         editarSelect.innerHTML = "";
         eliminarSelect.innerHTML = "";
 
@@ -203,15 +210,18 @@
         let opt2 = document.createElement("option");
         opt1.text = "-- Selecciona una sala --";
         opt2.text = "-- Selecciona una sala --";
+        opt1.value = "";
+        opt2.value = "";
         editarSelect.appendChild(opt1);
         eliminarSelect.appendChild(opt2);
-        
-        fetch(window.location.origin + "/CRUD/obtenersalas.php")
-        .then(data => data.json())
+
+        fetch("../CRUD/obtenersalas.php")
+        .then(res => res.json())
         .then(data => {
             data.forEach(sala => {
-                var option1 = document.createElement("option");
-                var option2 = document.createElement("option");
+                let option1 = document.createElement("option");
+                let option2 = document.createElement("option");
+
                 option1.text = `Sala ${sala.idsala}`;
                 option2.text = `Sala ${sala.idsala}`;
                 option1.value = sala.idsala;
@@ -219,7 +229,7 @@
 
                 option1.setAttribute("data-max", sala.capacidad);
                 option2.setAttribute("data-max", sala.capacidad);
-                
+
                 editarSelect.appendChild(option1);
                 eliminarSelect.appendChild(option2);
             });
@@ -228,31 +238,35 @@
             console.log(e);
         });
     }
-    // Función para obtener el número de alumnos (simula obtenerlo desde tu base de datos)
+
     function obtenerNumeroAlumnos(event) {
-        // Puedes implementar la lógica para obtener el número de alumnos asociado a la sala
-        // Por ahora, se devuelve un valor de ejemplo
         let input = document.querySelector("#numeroAlumnosEditar");
         let id = event.target.value;
+
+        if (!id) {
+            input.value = "";
+            return;
+        }
+
         let data = {
             idsala: id
         };
-        fetch(window.location.origin + '/CRUD/obteneralumnos.php', {
+
+        fetch("../CRUD/obteneralumnos.php", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(data)
         })
-        .then(data => data.json())
-        .then (data => {
+        .then(res => res.json())
+        .then(data => {
             input.value = data.capacidad;
-            return data.capacidad;
         })
         .catch(e => {
             console.log(e);
-            return 0;
         });
-        return 0; // Valor de ejemplo, ajusta según tus necesidades
     }
-
 </script>
 
     </div>
